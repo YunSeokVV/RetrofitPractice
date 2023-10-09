@@ -44,6 +44,9 @@ android {
 }
 
 dependencies {
+    // 로그를 보기 편하게 해주는 라이브러리
+    implementation("com.orhanobut:logger:2.2.0")
+
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.okhttp3:okhttp-bom:4.10.0")
     implementation ("com.google.code.gson:gson:2.10.1")

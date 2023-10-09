@@ -2,6 +2,7 @@ package com.example.retrofitpracticewithdustapi
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import java.util.Objects
 
@@ -16,4 +17,5 @@ interface DustApi {
         @Query("dataGubun", encoded = true) dataGubun : String,
         @Query("searchCondition", encoded = true) searchCondition : String,
     ): Call<DustModel>
+
 }
