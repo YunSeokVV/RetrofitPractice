@@ -1,33 +1,17 @@
 package com.example.retrofitpracticewithdustapi.repository
 
-import android.util.Log
-import com.example.retrofitpracticewithdustapi.BuildConfig
-import com.example.retrofitpracticewithdustapi.Citys
-import com.example.retrofitpracticewithdustapi.DustApi
-import com.example.retrofitpracticewithdustapi.DustApiProvider
-import com.example.retrofitpracticewithdustapi.DustModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.retrofitpracticewithdustapi.dataSource.DustRemoteDataSource
+import com.example.retrofitpracticewithdustapi.model.CityTemp
 
-class DustRepository() {
-    val api = DustApiProvider.provideDustApi()
+class DustRepository(private val dustRemoteDataSource: DustRemoteDataSource) {
 
-    // repository에서 호출해서 사용하기 위한 메소드다.
-    fun makeApiCall(callback : (Citys) -> Unit) {
-        // 아래 코드에서 이미 통신을 한다는 얘기다. 그 결과값이 dust에 담기는거고.
-        val dust = api.getDustInformation(BuildConfig.OPENAPI_CLIENT_ID,  "json", "100", "1",  "PM10", "HOUR", "MONTH")
-        //println(dustCall.request().url)
-        //enqueue : 비동저기적으로 요청과 알림 콜백의 응답을 보내거나 서버와 통신했을때 에러가 일어난경우, 요청을 만들거나 응답을 처리한다.
-        dust.enqueue(object: Callback<DustModel> {
-            override fun onResponse(call: Call<DustModel>, response: Response<DustModel>) {
-                val cityResult : Citys? = response.body()?.response?.body?.items?.get(0)
-                cityResult?.let { callback(it) }
-            }
+    // 코루틴 susped 를 쓰게되면서 Call 의 enqueue 메소드를 쓸 수 없어서 onResponse 와 onFailure를 쓸 수 없게 됐다.
+    // suspend 예약어가 붙음으로서 코루틴으로 사용될 것임을 나타낸다.
+    suspend fun getDustInformation() : CityTemp {
 
-            override fun onFailure(call: Call<DustModel>, t: Throwable) {
-            }
-        })
+        // 아래 메소드가 비동기적인 작업을 수행할 수 있고 이작업이 완료될때까지 getDustInformation 함수가 일시중지 된다.
+        //그 후에는 작업이 완료되면 결과에 접근할 수 있게 되서 response를 반환한다.
+        return dustRemoteDataSource.getDust().cityTemp
     }
 
 }

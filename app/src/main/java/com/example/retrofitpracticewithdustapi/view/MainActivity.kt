@@ -5,43 +5,32 @@
 package com.example.retrofitpracticewithdustapi.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.retrofitpracticewithdustapi.BuildConfig
 import com.example.retrofitpracticewithdustapi.Citys
-import com.example.retrofitpracticewithdustapi.DustApi
-import com.example.retrofitpracticewithdustapi.DustApiProvider
-import com.example.retrofitpracticewithdustapi.DustModel
 import com.example.retrofitpracticewithdustapi.R
 import com.example.retrofitpracticewithdustapi.viewModel.MainActivityViewModel
+import com.example.retrofitpracticewithdustapi.viewModel.ViewModelFactory
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    //방법2
-    //private lateinit var viewModel : MainActivityViewModel
 
-    //방법1
-    private val viewModel:MainActivityViewModel by lazy {
-        ViewModelProvider(this)[MainActivityViewModel::class.java]
-    }
+    // by viewModels 를 사용하면 ViewModelProvider를 사용하지 않고 viewModel을 지연 생성하는게 가능하다.
+    private val viewModel : MainActivityViewModel by viewModels { ViewModelFactory()}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //api = DustApiProvider.provideDustApi()
         Logger.addLogAdapter(AndroidLogAdapter())
 
-        //방법2
-        //viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
-        viewModel.getCityTemp().observe(this, Observer {data ->
-            updateUI(data)
+        viewModel.getCityTemp().observe(this, Observer { data ->
+            Logger.v(data.toString())
         })
-        viewModel.fetchData()
+
     }
 
     private fun updateUI(data: Citys){
