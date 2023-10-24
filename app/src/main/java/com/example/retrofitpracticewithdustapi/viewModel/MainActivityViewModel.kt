@@ -6,13 +6,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.retrofitpracticewithdustapi.DustUseCaseImpl
 import com.example.retrofitpracticewithdustapi.model.CityTemp
 import com.example.retrofitpracticewithdustapi.repository.DustRepository
+import com.example.retrofitpracticewithdustapi.useCase.DustUseCase
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 
 // 생성자안에 매개변수가 들어가는경우 ViewModel을 뷰단에서 ViewModelProvider 를 사용해서 생성할 수 없다. 매개변수를 넣고 싶다면 ViewModelFactory를 사용해야 한다.
-class MainActivityViewModel(private val dustRepository: DustRepository) : ViewModel(){
+//class MainActivityViewModel(private val dustRepository: DustRepository) : ViewModel(){
+class MainActivityViewModel(dustUseCase: DustUseCase) : ViewModel(){
+    //지연님 피드백
+    private val repository = DustUseCaseImpl()
     private var cityTemp = MutableLiveData<CityTemp>()
 
     init{
@@ -36,7 +41,8 @@ class MainActivityViewModel(private val dustRepository: DustRepository) : ViewMo
             // 로그로 확인해보니 이 시점의 스레드는 메인스레드였다. 메인스레드에서는 setValue를 쓰는게 맞다.
             Logger.v(Thread.currentThread().id.toString())
             Logger.v(Looper.getMainLooper().thread.id.toString())
-            cityTemp.setValue(dustRepository.getDustInformation())
+            cityTemp.setValue(repository.getDustInformation())
+            //cityTemp.setValue(dustUseCase.getDustInformation())
         }
     }
 
