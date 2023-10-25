@@ -6,27 +6,32 @@ package com.example.retrofitpracticewithdustapi.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.retrofitpracticewithdustapi.Citys
 import com.example.retrofitpracticewithdustapi.R
 import com.example.retrofitpracticewithdustapi.dataSource.DustApiService
+import com.example.retrofitpracticewithdustapi.dataSource.DustDataSource
 import com.example.retrofitpracticewithdustapi.dataSource.DustRemoteDataSource
 import com.example.retrofitpracticewithdustapi.repository.DustRepository
+import com.example.retrofitpracticewithdustapi.repository.DustRepositoryImpl
 import com.example.retrofitpracticewithdustapi.useCase.DustUseCase
+import com.example.retrofitpracticewithdustapi.useCase.DustUseCaseImpl
 import com.example.retrofitpracticewithdustapi.viewModel.MainActivityViewModel
-import com.example.retrofitpracticewithdustapi.viewModel.ViewModelFactory
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 
 class MainActivity : AppCompatActivity() {
 
-    val repository = DustRepository(DustRemoteDataSource(DustApiService.providerApi<DustApiService>()))
-    //val dustUseCase = DustUseCase()
-
     // by viewModels 를 사용하면 ViewModelProvider를 사용하지 않고 viewModel을 지연 생성하는게 가능하다.
-    private val viewModel : MainActivityViewModel by viewModels { ViewModelFactory()}
+    private val viewModel : MainActivityViewModel by viewModels{
+        viewModelFactory {
+            initializer {
+                MainActivityViewModel(DustUseCaseImpl(DustRepositoryImpl(DustRemoteDataSource(DustApiService.providerApi()))))
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
