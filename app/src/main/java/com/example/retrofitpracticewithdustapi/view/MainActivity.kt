@@ -5,6 +5,9 @@
 package com.example.retrofitpracticewithdustapi.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.initializer
@@ -38,14 +41,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Logger.addLogAdapter(AndroidLogAdapter())
 
+        val textView : TextView = findViewById(R.id.textView)
+        val progressBar : ProgressBar = findViewById(R.id.progressBar)
+
         viewModel.getCityTemp().observe(this, Observer { data ->
             Logger.v(data.toString())
+            textView.text = data.toString()
+            progressBar.visibility = View.GONE
         })
 
-    }
-
-    private fun updateUI(data: Citys){
-        Logger.v(data.toString())
     }
 
 }

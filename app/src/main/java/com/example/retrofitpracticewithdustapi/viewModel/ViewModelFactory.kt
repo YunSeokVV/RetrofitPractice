@@ -3,7 +3,6 @@ package com.example.retrofitpracticewithdustapi.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.retrofitpracticewithdustapi.dataSource.DustApiService
-import com.example.retrofitpracticewithdustapi.dataSource.DustRemoteDataSource
 import com.example.retrofitpracticewithdustapi.useCase.DustUseCase
 import java.lang.IllegalArgumentException
 
