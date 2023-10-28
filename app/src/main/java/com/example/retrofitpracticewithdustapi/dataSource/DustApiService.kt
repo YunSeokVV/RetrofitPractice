@@ -1,6 +1,8 @@
 package com.example.retrofitpracticewithdustapi.dataSource
 
 import com.example.retrofitpracticewithdustapi.model.DustModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -41,6 +43,7 @@ interface DustApiService{
                 .baseUrl("http://apis.data.go.kr/B552584/ArpltnStatsSvc/")
                 //client() : The HTTP client used for requests.
                 .client(DataSourceUtil().getEncodedClient())
+                //.client(OkHttpClient().newBuilder().addInterceptor(HttpLoggingInterceptor.Level.BODY))
                 .addConverterFactory(GsonConverterFactory.create())
                 //.addConverterFactory(ScalarsConverterFactory.create())
                 .build()

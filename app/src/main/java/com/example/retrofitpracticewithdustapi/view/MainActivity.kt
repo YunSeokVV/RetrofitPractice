@@ -3,6 +3,7 @@
 
 //DustApiProvider 파일을 제대로 익혀야 한다.
 package com.example.retrofitpracticewithdustapi.view
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -28,10 +29,18 @@ import com.orhanobut.logger.Logger
 class MainActivity : AppCompatActivity() {
 
     // by viewModels 를 사용하면 ViewModelProvider를 사용하지 않고 viewModel을 지연 생성하는게 가능하다.
-    private val viewModel : MainActivityViewModel by viewModels{
+    private val viewModel: MainActivityViewModel by viewModels {
         viewModelFactory {
             initializer {
-                MainActivityViewModel(DustUseCaseImpl(DustRepositoryImpl(DustRemoteDataSource(DustApiService.providerApi()))))
+                MainActivityViewModel(
+                    DustUseCaseImpl(
+                        DustRepositoryImpl(
+                            DustRemoteDataSource(
+                                DustApiService.providerApi()
+                            )
+                        )
+                    )
+                )
             }
         }
     }
@@ -41,13 +50,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Logger.addLogAdapter(AndroidLogAdapter())
 
-        val textView : TextView = findViewById(R.id.textView)
-        val progressBar : ProgressBar = findViewById(R.id.progressBar)
+        val textView: TextView = findViewById(R.id.textView)
+        val progressBar: ProgressBar = findViewById(R.id.progressBar)
 
         viewModel.getCityTemp().observe(this, Observer { data ->
             Logger.v(data.toString())
             textView.text = data.toString()
-            progressBar.visibility = View.GONE
+            //progressBar.visibility = View.VISIBLE
+        })
+
+        viewModel.getIsDownComplete().observe(this, Observer { data ->
+            Logger.v(data.toInt().toString())
+            progressBar.visibility = data.toInt()
         })
 
     }

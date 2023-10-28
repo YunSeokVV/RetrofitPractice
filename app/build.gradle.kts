@@ -44,6 +44,9 @@ android {
 }
 
 dependencies {
+    // HttpLoggingInterceptor 를 사용하기 위해서
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
     // 로그를 보기 편하게 해주는 라이브러리
     implementation("com.orhanobut:logger:2.2.0")
 
