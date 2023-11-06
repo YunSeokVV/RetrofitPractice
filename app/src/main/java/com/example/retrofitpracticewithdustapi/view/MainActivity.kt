@@ -64,6 +64,20 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = data.toInt()
         })
 
+        viewModel.getErrorStatusLiveData().observe(this, Observer {
+            when(it){
+                MainActivityViewModel.ApiStatus.LOADING -> {
+                    Logger.v("Loading Now ...")
+                }
+                MainActivityViewModel.ApiStatus.ERROR -> {
+                    Logger.v("Network Error")
+                }
+                MainActivityViewModel.ApiStatus.DONE -> {
+                    Logger.v("Loading complete")
+                }
+            }
+        })
+
     }
 
 }
