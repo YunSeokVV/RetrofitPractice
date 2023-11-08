@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.initializer
@@ -25,6 +26,9 @@ import com.example.retrofitpracticewithdustapi.useCase.DustUseCaseImpl
 import com.example.retrofitpracticewithdustapi.viewModel.MainActivityViewModel
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import org.json.JSONException
+import java.net.UnknownHostException
+import java.util.concurrent.TimeoutException
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,17 +68,13 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = data.toInt()
         })
 
-        viewModel.getErrorStatusLiveData().observe(this, Observer {
+        viewModel.errorStatusLiveData.observe(this, Observer {
+            Logger.v(it.message.toString())
             when(it){
-                MainActivityViewModel.ApiStatus.LOADING -> {
-                    Logger.v("Loading Now ...")
-                }
-                MainActivityViewModel.ApiStatus.ERROR -> {
-                    Logger.v("Network Error")
-                }
-                MainActivityViewModel.ApiStatus.DONE -> {
-                    Logger.v("Loading complete")
-                }
+                is UnknownHostException -> Toast.makeText(applicationContext, "UnknownHostException", Toast.LENGTH_SHORT).show()
+                is TimeoutException -> Toast.makeText(applicationContext, "TimeoutException", Toast.LENGTH_SHORT).show()
+                is JSONException -> Toast.makeText(applicationContext, "JSONException", Toast.LENGTH_SHORT).show()
+                else ->  Toast.makeText(applicationContext, "Some Exception Occured", Toast.LENGTH_SHORT).show()
             }
         })
 
