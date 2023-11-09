@@ -29,8 +29,14 @@ import java.util.concurrent.TimeoutException
 
 // 생성자안에 매개변수가 들어가는경우 ViewModel을 뷰단에서 ViewModelProvider 를 사용해서 생성할 수 없다. 매개변수를 넣고 싶다면 ViewModelFactory를 사용해야 한다.
 class MainActivityViewModel(private val dustUseCase: DustUseCase) : ViewModel() {
-    private val cityTemp = MutableLiveData<DustModel>()
-    private val isDownComplete = MutableLiveData<Int>()
+    private val _cityTemp = MutableLiveData<DustModel>()
+    val cityTemp : LiveData<DustModel> get() {return _cityTemp}
+
+
+    private val _downComplete = MutableLiveData<Int>()
+    val downComplete : LiveData<Int> get(){return _downComplete}
+
+
     private val _errorStatusLiveData = MutableLiveData<Throwable>()
     val errorStatusLiveData : LiveData<Throwable> get() { return _errorStatusLiveData}
 
@@ -41,7 +47,7 @@ class MainActivityViewModel(private val dustUseCase: DustUseCase) : ViewModel() 
     // 예제에서는 ViewModelScope 를 쓰고 있다. viewModelScope 가 무엇인지 모르면 이 이상 코딩하기는 어렵다.
     private fun loadTemp() {
         //프로그레스바 보이게
-        isDownComplete.value = View.VISIBLE
+        _downComplete.value = View.VISIBLE
 
         //ViewModelScope : 뷰모델과 엮여있는 코루틴영역이다. ViewModel이 clear되면 이 영역(scope)도 사라진다. 예를 들면 viewModel.onCleared가 호출될때
         //launch : 스레드의 실행을 중지하지 않고 새로운 코루틴을 실행시키고 코루틴에게 Job객체를 새로 반환시켜준다. 결과 job이 취소되면 코루틴도 취소된다.
@@ -53,23 +59,14 @@ class MainActivityViewModel(private val dustUseCase: DustUseCase) : ViewModel() 
                 if (dustUseCase.getDustInformation().isSuccessful) {
                     Logger.v(dustUseCase.getDustInformation().message())
                     Logger.v(dustUseCase.getDustInformation().body().toString())
-                    cityTemp.value = dustUseCase.getDustInformation().body()
+                    _cityTemp.value = dustUseCase.getDustInformation().body()
 
                     //프로그레스바 안보이게
-                    isDownComplete.value = View.GONE
+                    _downComplete.value = View.GONE
                 }
             } catch (throwable: Throwable) {
                 _errorStatusLiveData.value = throwable
             }
         }
     }
-
-    fun getCityTemp(): LiveData<DustModel> {
-        return cityTemp
-    }
-
-    fun getIsDownComplete(): LiveData<Int> {
-        return isDownComplete
-    }
-
 }

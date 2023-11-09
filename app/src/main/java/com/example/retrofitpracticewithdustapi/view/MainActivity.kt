@@ -57,13 +57,12 @@ class MainActivity : AppCompatActivity() {
         val textView: TextView = findViewById(R.id.textView)
         val progressBar: ProgressBar = findViewById(R.id.progressBar)
 
-        viewModel.getCityTemp().observe(this, Observer { data ->
+        viewModel.cityTemp.observe(this, Observer { data ->
             Logger.v(data.toString())
             textView.text = data.toString()
-            //progressBar.visibility = View.VISIBLE
         })
 
-        viewModel.getIsDownComplete().observe(this, Observer { data ->
+        viewModel.downComplete.observe(this, Observer { data ->
             Logger.v(data.toInt().toString())
             progressBar.visibility = data.toInt()
         })
