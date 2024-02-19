@@ -8,15 +8,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.retrofitpracticewithdustapi.dataSource.DustApiService
-import com.example.retrofitpracticewithdustapi.dataSource.DustRemoteDataSource
-import com.example.retrofitpracticewithdustapi.model.CityTemp
 import com.example.retrofitpracticewithdustapi.model.DustModel
-import com.example.retrofitpracticewithdustapi.repository.DustRepositoryImpl
-import com.example.retrofitpracticewithdustapi.useCase.DustUseCase
-import com.example.retrofitpracticewithdustapi.useCase.DustUseCaseImpl
+import com.example.retrofitpracticewithdustapi.useCase.GetDust
+
 import com.google.gson.JsonSyntaxException
 import com.orhanobut.logger.Logger
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -26,9 +23,10 @@ import retrofit2.Response
 import java.net.SocketException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
+import javax.inject.Inject
 
-// 생성자안에 매개변수가 들어가는경우 ViewModel을 뷰단에서 ViewModelProvider 를 사용해서 생성할 수 없다. 매개변수를 넣고 싶다면 ViewModelFactory를 사용해야 한다.
-class MainActivityViewModel(private val dustUseCase: DustUseCase) : ViewModel() {
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(private val dustUseCase: GetDust) : ViewModel() {
     private val _cityTemp = MutableLiveData<DustModel>()
     val cityTemp : LiveData<DustModel> get() {return _cityTemp}
 
