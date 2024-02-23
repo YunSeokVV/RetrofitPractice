@@ -11,9 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
-import kotlin.math.log
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -46,6 +44,7 @@ object APIModule {
         return retrofit.create(DustApiService::class.java)
     }
 
+    // 아래 코드는 DustRepository 구현체를 만드는 코드다.
     @Singleton
     @Provides
     fun provideDustRepository(dustApiService: DustApiService) = DustRepository(dustApiService)
