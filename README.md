@@ -1,0 +1,3 @@
+- Hilt적용(간단하게 Retrofit을 사용해서 외부에서 받아온 데이터를 emit과 flow를 통해 사용해봄)
+- 각 클래스별로 사용하지 않는 import문 삭제
+- ViewModelFactory클래스 삭제
